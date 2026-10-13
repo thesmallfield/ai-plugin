@@ -34,13 +34,15 @@ Use only the `small-field` MCP tools. If they are missing or return 401, ask the
 1. Read `smallfield.json` at the repo root. It is the `manifest`; its `project` is the project
    name. If it is missing, ask the user before writing one.
 2. `create_project` with that name (safe if it already exists).
-3. Zip the repo without `node_modules`, `.git`, build output or `.env` files, e.g.
+3. Run `git status --porcelain`. If it prints anything, tell the user that uncommitted changes
+   won't be deployed and ask them to commit first.
+4. Zip the repo without `node_modules`, `.git`, build output or `.env` files, e.g.
    `git archive --format=zip -o /tmp/app.zip HEAD`. Get its size in bytes.
-4. `create_upload` with `project` and `sizeBytes`.
-5. Upload the zip:
+5. `create_upload` with `project` and `sizeBytes`.
+6. Upload the zip:
    `curl -fsS -X PUT -H 'content-type: application/zip' --data-binary @/tmp/app.zip "<url>"`.
-6. `deploy` with `project`, `uploadId` and the `manifest` object.
-7. Poll `get_release` with the returned release id every 10 seconds until `live` or `failed`.
+7. `deploy` with `project`, `uploadId` and the `manifest` object.
+8. Poll `get_release` with the returned release id every 10 seconds until `live` or `failed`.
    On `live`, show the web address. On `failed`, show the error and check `get_logs`.
 
 Never print secret values. Ask before `remove_secret` with `confirm: true`; it restarts forks.

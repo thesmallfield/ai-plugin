@@ -1,0 +1,17 @@
+{
+    "name": "small-field",
+    "displayName": "Small Field",
+    "version": "0.0.1",
+    "description": "Deploy and manage your Small Field apps with Claude.",
+    "author": { "name": "Small Field", "url": "https://github.com/thesmallfield" },
+    "repository": "https://github.com/thesmallfield/ai-plugin",
+    "keywords": ["deploy", "mcp", "small-field"],
+    "userConfig": {
+        "console_url": {
+            "type": "string",
+            "title": "Console URL",
+            "description": "The address of your Small Field Console, without a trailing slash, e.g. https://appsadmin.perkinswill.com",
+            "required": true
+        }
+    }
+}

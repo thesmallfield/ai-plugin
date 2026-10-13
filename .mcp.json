@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "small-field": {
+            "type": "http",
+            "url": "${user_config.console_url}/mcp"
+        }
+    }
+}

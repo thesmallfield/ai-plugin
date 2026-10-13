@@ -1,0 +1,12 @@
+{
+    "name": "thesmallfield",
+    "owner": { "name": "Small Field", "url": "https://github.com/thesmallfield" },
+    "description": "Small Field plugins for Claude Code.",
+    "plugins": [
+        {
+            "name": "small-field",
+            "source": "./",
+            "description": "Deploy and manage your Small Field apps with Claude."
+        }
+    ]
+}

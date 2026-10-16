@@ -8,6 +8,9 @@ description: Deploy and manage Small Field apps with the small-field MCP tools. 
 Use only the `small-field` MCP tools. If they are missing or return 401, ask the user to run
 `/mcp`, pick small-field and choose Authenticate.
 
+Read the docs: call `read_doc` with a slug (e.g. `smallfield-json`, `logs-and-releases`) for the
+exact details. `list_docs` lists every page.
+
 ## Tools
 
 | Tool | Inputs | Use it to |
@@ -24,8 +27,11 @@ Use only the `small-field` MCP tools. If they are missing or return 401, ask the
 | `set_secret` | `project`, `environment?`, `name`, `value` | Save a secret (used on the next deploy) |
 | `list_secret_names` | `project`, `environment?` | List secret names, never values |
 | `remove_secret` | `project`, `environment?`, `name`, `confirm?` | Remove a secret |
+| `set_maintenance` | `project`, `environment?`, `on`, `message?` | Switch maintenance on or off |
 | `list_templates` | none | List the team's templates |
 | `list_template_versions` | `template` | List a template's versions |
+| `list_docs` | none | List the doc pages: `slug`, `title`, `summary` |
+| `read_doc` | `slug` | Read one doc page as Markdown |
 
 `environment` defaults to the tenant default (e.g. `development`).
 

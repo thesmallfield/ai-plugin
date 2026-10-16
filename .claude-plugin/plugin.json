@@ -10,7 +10,7 @@
         "console_url": {
             "type": "string",
             "title": "Console URL",
-            "description": "The address of your Small Field Console, without a trailing slash, e.g. https://appsadmin.perkinswill.com",
+            "description": "The address of your Small Field Console, without a trailing slash, e.g. https://console.example.com",
             "required": true
         }
     }

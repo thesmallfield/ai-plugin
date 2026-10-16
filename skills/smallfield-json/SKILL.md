@@ -12,8 +12,9 @@ routing).
 ## Steps
 
 1. Read the repo: which folders are a website, a server or a script, and their package files.
-2. Pick a `project` name: lowercase letters, digits and hyphens, up to 40 characters, not ending
-   in `-dev`, `-staging` or `-production`.
+2. Pick a `project` name: lowercase letters, digits and hyphens, up to 40 characters. It cannot
+   end in `-dev`, `-development`, `-staging` or `-production`, and cannot be `auth`, `www`, `api`,
+   `admin`, `registry` or `files`.
 3. Add one component per part, each with a `kind` and a `dir`:
    - `static`: a built website. Add `build` and `output` (default `dist`).
    - `web`: a server. It must listen on `process.env.PORT` and `0.0.0.0`. `port` defaults to 8080.

@@ -20,7 +20,8 @@ maintenance mode) for the exact behaviour.
    - A wrong `path` or `stripPrefix`, so routes get the wrong URL.
    - Rising restarts usually mean a crash or out of memory; try a bigger `size`.
 5. While fixing, `set_maintenance` with `on: true` and a short `message` shows visitors a
-   maintenance page. Owners and admins still get through. Turn it off with `on: false`.
+   maintenance page. The project's owners and platform admins still get through. Turn it off
+   with `on: false`.
 6. To roll back, check out the earlier commit and deploy again. There is no rollback button.
 7. A failed release does not take the app down: the old one keeps serving.
 

@@ -33,6 +33,9 @@ instead of steps 4 to 6.
 - **Secrets:** ask the user for each value, `set_secret`, then deploy again (`read_doc` `secrets`
   says when a secret takes effect). `list_secret_names` shows what is set. Never print a value.
   Ask before `remove_secret`.
+- **Firm keys (OpenAI, Anthropic):** before asking the user for such a key, call `list_shared_keys`.
+  If the firm has it, `request_shared_key` with a one-line reason instead of `set_secret`; an IT admin
+  approves it, and it reaches the app on the next deploy. Never ask for or print its value.
 - **Run a job now:** `run_job` with `project` and `job`, then tell the user where to watch it
   (`read_doc` `jobs`).
 - **Promote:** `promote` with `project`, `from` and `to`, then poll `get_release`.

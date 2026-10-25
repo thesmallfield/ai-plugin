@@ -54,4 +54,4 @@ jobs:
               run: |
                   tag="v0.0.1-$(git rev-parse --short HEAD)"
                   notes="Skills at $GITHUB_SHA. Point the api at them: echo $GITHUB_SHA > apps/mcp/skills.ref"
-                  gh release create "$tag" dist/*.zip --latest --title "$tag" --notes "$notes"
+                  gh release create "$tag" dist/*.zip --target "$GITHUB_SHA" --latest --title "$tag" --notes "$notes"

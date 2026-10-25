@@ -1,42 +1,46 @@
 ---
 name: smallfield-json
-description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, pick a runtime or machine size, or when a deploy fails with a "smallfield.json (at ...)" error.
+description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, add secrets, a database, a scheduled job, let one app call another (exports and uses), or when a deploy fails with a "smallfield.json (at ...)" error.
 ---
 
 # Write or fix smallfield.json
 
-`smallfield.json` sits at the repo root and says what the app is made of. Before writing config,
-call `read_doc` with slug `smallfield-json` for the exact fields and rules (and `components` for
-routing).
+`smallfield.json` sits at the repo root and says what the app is made of. Every field and rule is
+in the docs. For each part below, call `read_doc` with the slug it names **before** writing, and
+follow that page. If `read_doc` fails, ask the user to sign in to the connector; do not guess.
 
-## Steps
+## Start or fix the file
 
-1. Read the repo: which folders are a website, a server or a script, and their package files.
-2. Pick a `project` name: lowercase letters, digits and hyphens, up to 40 characters. It cannot
-   end in `-dev`, `-development`, `-staging` or `-production`, and cannot be `auth`, `www`, `api`,
-   `admin`, `registry` or `files`.
-3. Add one component per part, each with a `kind` and a `dir`:
-   - `static`: a built website. Add `build` and `output` (default `dist`).
-   - `web`: a server. It must listen on `process.env.PORT` and `0.0.0.0`. `port` defaults to 8080.
-   - `job`: a script that runs to the end. Needs `command`; `schedule` is optional.
-4. Set `path` when there is more than one component: `static` at `/`, `web` at `/<name>`. The
-   prefix is removed before the request reaches the code unless `"stripPrefix": false`.
-5. Add `databases`, `secrets` (names only, never values), `public` paths or `exports`/`uses`
-   only when the app needs them.
-6. Unknown keys are ignored, so check spelling. When a deploy fails, the error names the field,
-   e.g. `smallfield.json (at "components.api.path")`. Fix that field and deploy again.
+1. `read_doc` `smallfield-json`, and `components` when there is more than one part.
+2. Read the repo: which folders are a website, a server or a script, and their package files.
+3. Write one component per part, as the page shows. Keep only what the app needs.
+4. A deploy error like `smallfield.json (at "components.api.path")` names the field. Read that
+   field on the page, fix it, and deploy again.
+
+## Jobs
+
+1. `read_doc` `jobs`.
+2. Add the job component the page describes, with a schedule only if the user wants one.
+3. After the deploy, start it with `run_job` to check it works.
+
+## Secrets
+
+1. `read_doc` `secrets`.
+2. Put only the **names** in the file. Never write a value into the file, the code or the chat log.
+3. Ask the user for each value and save it with `set_secret` (see the `deploy` skill).
+
+## Databases
+
+1. `read_doc` `databases`.
+2. Add the database entry and, if the app changes its schema, the migrate command, as the page shows.
+
+## One app calls another
+
+1. `read_doc` `connected-apps`.
+2. Add `exports` in the provider and `uses` in the caller, as the page shows. Deploy both.
+3. Tell the user the step only a person can do in the console (the page names it).
 
 ## Example
 
-```json
-{
-  "project": "notes",
-  "components": {
-    "ui": { "kind": "static", "dir": "ui", "path": "/", "build": "npm run build" },
-    "api": { "kind": "web", "dir": "api", "path": "/api", "port": 8080 }
-  },
-  "databases": [{ "engine": "postgres" }]
-}
-```
-
-The UI calls `fetch('/api/notes')`; the API code handles `/notes`.
+User: "Add a nightly cleanup script." `read_doc` `jobs`, add a `cleanup` job with a daily
+schedule as the page shows, deploy, then `run_job` with `job: "cleanup"` and report the result.

@@ -8,6 +8,10 @@ on:
 permissions:
     contents: read
 
+env:
+    CLAUDE: npx -y @anthropic-ai/claude-code@2.1.296
+    SKILLS_REF: git+https://github.com/agentskills/agentskills@69ef37e9424c0a7ea9dd2293b559e43ec8176379#subdirectory=skills-ref
+
 jobs:
     validate:
         runs-on: ubuntu-latest
@@ -17,5 +21,37 @@ jobs:
               with:
                   node-version: 24
             - run: for f in .claude-plugin/*.json .mcp.json; do jq empty "$f"; done
-            - run: npx -y @anthropic-ai/claude-code@2.1.296 plugin validate --strict .
-            - run: npx -y @anthropic-ai/claude-code@2.1.296 plugin validate --strict .claude-plugin/plugin.json
+            - run: $CLAUDE plugin validate --strict .
+            - run: $CLAUDE plugin validate --strict .claude-plugin/plugin.json
+            - run: for dir in skills/*/; do pipx run --spec "$SKILLS_REF" skills-ref validate "$dir"; done
+            - name: Skills fit ChatGPT and stay instructions only
+              run: |
+                  count=$(ls -d skills/*/ | wc -l)
+                  [ "$count" -le 5 ] || { echo "ChatGPT takes at most 5 skills, found $count"; exit 1; }
+                  for dir in skills/*/; do
+                      name=$(basename "$dir")
+                      file="$dir/SKILL.md"
+                      [ "$(sed -n 's/^name: //p' "$file" | head -1)" = "$name" ] || { echo "$file: name must be $name"; exit 1; }
+                      [ "$(sed -n 's/^description: //p' "$file" | head -1 | wc -c)" -le 1025 ] || { echo "$file: description over 1024 chars"; exit 1; }
+                      [ "$(ls "$dir")" = "SKILL.md" ] || { echo "$dir: only SKILL.md is allowed"; exit 1; }
+                  done
+            - run: ./scripts/release.sh
+
+    release:
+        needs: validate
+        if: github.event_name == 'push'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v5
+            - run: ./scripts/release.sh
+              env:
+                  SAAS_MCP_URL: ${{ vars.SAAS_MCP_URL }}
+            - name: Publish the release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  tag="v0.0.1-$(git rev-parse --short HEAD)"
+                  notes="Skills at $GITHUB_SHA. Point the api at them: echo $GITHUB_SHA > apps/mcp/skills.ref"
+                  gh release create "$tag" dist/*.zip --latest --title "$tag" --notes "$notes"

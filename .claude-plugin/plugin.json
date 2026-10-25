@@ -5,6 +5,7 @@
     "description": "Deploy and manage your Small Field apps with Claude.",
     "author": { "name": "Small Field", "url": "https://github.com/thesmallfield" },
     "repository": "https://github.com/thesmallfield/ai-plugin",
+    "license": "MIT",
     "keywords": ["deploy", "mcp", "small-field"],
     "userConfig": {
         "console_url": {

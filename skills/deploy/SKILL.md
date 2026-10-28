@@ -12,8 +12,10 @@ and `logs-and-releases`.
 
 ## Deploy the current repo
 
-1. Read `smallfield.json` at the repo root: it is the `manifest`, and its `project` is the
-   project name. If it is missing or wrong, use the `smallfield-json` skill first.
+1. Read the project file at the repo root: `appfoundry.json` if it exists, else `smallfield.json`.
+   It is the `manifest`, and its `project` is the project name. Some installs name the file
+   differently: `read_doc` `names` lists the file names this install accepts. If there is none, or
+   it is wrong, use the `smallfield-json` skill first.
 2. `create_project` with that name (safe if it already exists).
 3. Run `git status --porcelain`. If it prints anything, tell the user uncommitted changes are not
    deployed and ask them to commit first.
@@ -44,5 +46,5 @@ instead of steps 4 to 6.
 
 ## Example
 
-User: "Deploy this." Read `smallfield.json` (`project: "notes"`), `create_project` `notes`, zip,
+User: "Deploy this." Read the project file (`project: "notes"`), `create_project` `notes`, zip,
 `create_upload`, PUT the zip, `deploy`, poll `get_release` until `live`, and reply with the address.

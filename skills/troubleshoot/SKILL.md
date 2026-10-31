@@ -20,6 +20,9 @@ for the maintenance page and `limits` when something looks capped.
    - A missing secret (`list_secret_names`) or env var: `read_doc` `secrets`.
    - A failing migration or database error: `read_doc` `databases`, and `query_database` to look
      at the data (read-only).
+   - `NOPERM No permissions to access a key`, `OOM`, or `"engine": "redis"` refused: `read_doc`
+     `valkey`. NOPERM means a key or channel without the `VALKEY_PREFIX`. We offer Valkey, a
+     drop-in replacement for Redis; never suggest running Redis yourself.
 5. If the live app is broken and the fix will take time, offer `rollback` (back to the release
    before), then poll `get_release`.
 6. While fixing, offer `set_maintenance` with `on: true` and a short `message`; turn it off after.

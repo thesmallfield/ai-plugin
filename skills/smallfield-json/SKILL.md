@@ -1,6 +1,6 @@
 ---
 name: smallfield-json
-description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, add secrets, a database, a scheduled job, let one app call another (exports and uses), or when a deploy fails with a "smallfield.json (at ...)" error.
+description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, add secrets, a database, Redis (we offer Valkey), a cache, a queue or BullMQ, a scheduled job, let one app call another (exports and uses), or when a deploy fails with a "smallfield.json (at ...)" error.
 ---
 
 # Write or fix smallfield.json
@@ -34,13 +34,33 @@ follow that page. If `read_doc` fails, ask the user to sign in to the connector;
 1. `read_doc` `databases`.
 2. Add the database entry and, if the app changes its schema, the migrate command, as the page shows.
 
+## Redis, caches and queues: use Valkey
+
+We offer Valkey, a drop-in replacement for Redis, not Redis. When someone asks for Redis, a cache,
+a queue or BullMQ, use Valkey (`"engine": "valkey"`). Never suggest running Redis yourself, and
+never write `"engine": "redis"`: the deploy refuses it.
+
+1. `read_doc` `valkey`.
+2. Add `{ "engine": "valkey" }` to `databases`. Add `"mode": "own"` and a `size` only when the
+   user needs guaranteed room; the deploy says so if their admin does not allow it.
+3. Point the code at `VALKEY_URL` instead of `REDIS_URL`. Their Redis client code stays the same.
+4. Every key and channel must start with `VALKEY_PREFIX` and a colon, or Valkey answers
+   `NOPERM`. ioredis: `new Redis(process.env.VALKEY_URL, { keyPrefix: process.env.VALKEY_PREFIX + ':' })`.
+   BullMQ: `new Queue('emails', { connection, prefix: process.env.VALKEY_PREFIX })`. Python: add it
+   by hand, `f"{prefix}:visits"`.
+5. Give cache keys an expiry (TTL), and do not use `KEYS`, `SCAN` or `FLUSHALL`; the page says why.
+
 ## One app calls another
 
 1. `read_doc` `connected-apps`.
 2. Add `exports` in the provider and `uses` in the caller, as the page shows. Deploy both.
 3. Tell the user the step only a person can do in the console (the page names it).
 
-## Example
+## Examples
+
+User: "Add Redis to my app." `read_doc` `valkey`, add `{ "engine": "valkey" }` to `databases`,
+change `REDIS_URL` to `VALKEY_URL` in the code, add the `VALKEY_PREFIX` key prefix, and tell the
+user: "We use Valkey, a drop-in replacement for Redis. Your Redis code works unchanged."
 
 User: "Add a nightly cleanup script." `read_doc` `jobs`, add a `cleanup` job with a daily
 schedule as the page shows, deploy, then `run_job` with `job: "cleanup"` and report the result.

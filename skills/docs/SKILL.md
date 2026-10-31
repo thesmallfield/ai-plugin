@@ -1,6 +1,6 @@
 ---
 name: docs
-description: Answer questions about Small Field from its developer docs. Use when the user asks how something works on Small Field (deploys, smallfield.json, secrets, databases, files, email, jobs, access, sign-in, connected apps, maintenance, rollback, the CLI, examples) and the answer is not already clear.
+description: Answer questions about Small Field from its developer docs. Use when the user asks how something works on Small Field (deploys, smallfield.json, secrets, databases, Valkey (Redis), files, email, jobs, access, sign-in, connected apps, maintenance, rollback, the CLI, examples) and the answer is not already clear.
 ---
 
 # Answer questions from the Small Field docs

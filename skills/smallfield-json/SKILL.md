@@ -1,6 +1,6 @@
 ---
 name: smallfield-json
-description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, add secrets, a database, Redis (we offer Valkey), a cache, a queue or BullMQ, a scheduled job, let one app call another (exports and uses), or when a deploy fails with a "smallfield.json (at ...)" error.
+description: Write or fix smallfield.json, the Small Field manifest at the repo root. Use when the user wants to set up a repo for Small Field, add a component (static site, web server, job), change paths or ports, add secrets, a database, Redis (we offer Valkey), a cache, a queue or BullMQ, a scheduled job, let one app call another (exports and uses), turn file thumbnails off, or when a deploy fails with a "smallfield.json (at ...)" error.
 ---
 
 # Write or fix smallfield.json
@@ -55,6 +55,12 @@ never write `"engine": "redis"`: the deploy refuses it.
 1. `read_doc` `connected-apps`.
 2. Add `exports` in the provider and `uses` in the caller, as the page shows. Deploy both.
 3. Tell the user the step only a person can do in the console (the page names it).
+
+## File thumbnails
+
+1. `read_doc` `files`, section Thumbnails.
+2. To turn them off for the whole app, add the `files` field the page shows. For one upload, use
+   the upload option it names instead.
 
 ## Examples
 
